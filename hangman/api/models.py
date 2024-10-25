@@ -22,15 +22,18 @@ class Game(models.Model):
     incorrect_guesses_made = models.IntegerField(default=0)
     incorrect_guesses_left = models.IntegerField(default=0)
     
-    def new_game(self):
+    @classmethod
+    def new_game(cls):
         """Initialize a new game with a word"""
-        self.word = self.get_random_word()
-        self.word_state = '_' * len(self.word)
-        self.incorrect_guesses_made = 0
-        self.incorrect_guesses_left = math.ceil(len(self.word) / 2)
-        self.status = self.GameStatus.IN_PROGRESS
-        self.save()
+        game = cls()
+        game.word = cls.get_random_word()
+        game.word_state = '_' * len(game.word)
+        game.incorrect_guesses_made = 0
+        game.incorrect_guesses_left = math.ceil(len(game.word) / 2)
+        game.status = game.GameStatus.IN_PROGRESS
+        game.save()
 
+    @classmethod
     def get_random_word(cls):
         return random.choice(cls.WORD_CHOICES)
 

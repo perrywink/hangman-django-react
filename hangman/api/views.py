@@ -12,12 +12,9 @@ class GameCreate(generics.CreateAPIView):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
 
-    def create(self):
-        # Create a new game using our model method
-        game = Game.new_game(Game())
-        # Serialize it
+    def create(self, request):
+        game = Game.new_game()
         serializer = self.get_serializer(game)
-        # Return the serialized data
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class GameRetrieve(generics.RetrieveAPIView):
