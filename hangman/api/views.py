@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, response, status
 from rest_framework.exceptions import ValidationError
 from .models import Game
-from .serializers import GameSerializer
+from .serializers import GameSerializer, GameIdSerializer
 
 # TMP API
 class GameList(generics.ListAPIView):
@@ -11,7 +11,7 @@ class GameList(generics.ListAPIView):
 
 class GameCreate(generics.CreateAPIView):
     queryset = Game.objects.all()
-    serializer_class = GameSerializer
+    serializer_class = GameIdSerializer
 
     def create(self, request, *args, **kwargs):
         game = Game.new_game()
