@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from rest_framework import generics, response, status
-from rest_framework.exceptions import ValidationError
+from rest_framework import generics, status
+from rest_framework.response import Response
 from .models import Game
 from .serializers import GameSerializer, GameIdSerializer, GameGuessSerializer
 
@@ -16,7 +16,7 @@ class GameCreate(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         game = Game.new_game()
         serializer = self.get_serializer(game)
-        return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class GameRetrieve(generics.RetrieveAPIView):
     queryset = Game.objects.all()
@@ -28,21 +28,14 @@ class GameUpdate(generics.UpdateAPIView):
     serializer_class = GameSerializer
     lookup_field = "pk"
 
-    def get_serializer_class(self):
-        if self.request.method in ['PUT', 'PATCH']:
-            return GameGuessSerializer
-        return GameSerializer
-
     def update(self, request, *args, **kwargs):
         game = self.get_object()
         
-        # Explicitly use GuessSerializer for input
         guess_serializer = GameGuessSerializer(data=request.data)
         guess_serializer.is_valid(raise_exception=True)
         
         game.make_guess(guess_serializer.validated_data['guess'])
         
-        # Use default GameSerializer for output
         return Response(
             self.get_serializer(game).data,
             status=status.HTTP_200_OK
