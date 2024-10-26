@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: API for Audacix Hangman Game
 paths:
-  /game/{id}/:
+  /api/game/{id}/:
     get:
       operationId: game_retrieve
       parameters:
@@ -26,7 +26,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Game'
           description: ''
-  /game/{id}/guess/:
+  /api/game/{id}/guess/:
     put:
       operationId: game_guess_update
       parameters:
@@ -74,13 +74,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedGameGuess'
+              $ref: '#/components/schemas/PatchedGame'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedGameGuess'
+              $ref: '#/components/schemas/PatchedGame'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedGameGuess'
+              $ref: '#/components/schemas/PatchedGame'
       security:
       - cookieAuth: []
       - basicAuth: []
@@ -90,9 +90,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GameGuess'
+                $ref: '#/components/schemas/Game'
           description: ''
-  /game/new/:
+  /api/game/new/:
     post:
       operationId: game_new_create
       tags:
@@ -119,7 +119,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/GameId'
           description: ''
-  /games/:
+  /api/games/:
     get:
       operationId: games_list
       tags:
@@ -181,14 +181,27 @@ components:
           readOnly: true
       required:
       - id
-    PatchedGameGuess:
+    PatchedGame:
       type: object
       properties:
-        guess:
+        id:
+          type: integer
+          readOnly: true
+        word_state:
           type: string
-          description: A single character guess
-          maxLength: 1
-          minLength: 1
+          maxLength: 100
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        incorrect_guesses_made:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        incorrect_guesses_left:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
     StatusEnum:
       enum:
       - InProgress

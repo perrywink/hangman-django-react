@@ -74,13 +74,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedGameGuess'
+              $ref: '#/components/schemas/PatchedGame'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedGameGuess'
+              $ref: '#/components/schemas/PatchedGame'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedGameGuess'
+              $ref: '#/components/schemas/PatchedGame'
       security:
       - cookieAuth: []
       - basicAuth: []
@@ -90,7 +90,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GameGuess'
+                $ref: '#/components/schemas/Game'
           description: ''
   /api/game/new/:
     post:
@@ -181,14 +181,27 @@ components:
           readOnly: true
       required:
       - id
-    PatchedGameGuess:
+    PatchedGame:
       type: object
       properties:
-        guess:
+        id:
+          type: integer
+          readOnly: true
+        word_state:
           type: string
-          description: A single character guess
-          maxLength: 1
-          minLength: 1
+          maxLength: 100
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        incorrect_guesses_made:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        incorrect_guesses_left:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
     StatusEnum:
       enum:
       - InProgress

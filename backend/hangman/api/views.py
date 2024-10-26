@@ -3,7 +3,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from .models import Game
 from .serializers import GameSerializer, GameIdSerializer, GameGuessSerializer
-
+from drf_spectacular.utils import extend_schema
 
 class GameList(generics.ListAPIView):
     queryset = Game.objects.all().order_by('-id')[:10]
@@ -31,6 +31,14 @@ class GameUpdate(generics.UpdateAPIView):
     serializer_class = GameSerializer
     lookup_field = "pk"
 
+    def get_serializer_class(self):
+        # Needed for schema generator to output game guess at al
+        if self.request.method == 'PUT':
+            return GameGuessSerializer
+        return GameSerializer
+
+    # to allow for the schema generation to pick up on the correct types
+    @extend_schema(request=GameGuessSerializer, responses={200: GameSerializer})
     def update(self, request, *args, **kwargs):
         game = self.get_object()
 
@@ -39,7 +47,9 @@ class GameUpdate(generics.UpdateAPIView):
 
         game.make_guess(guess_serializer.validated_data['guess'])
 
+        # separate object instead of usual self.get_serializer
+        response_serializer = GameSerializer(game)
         return Response(
-            self.get_serializer(game).data,
+            response_serializer.data,
             status=status.HTTP_200_OK
         )
