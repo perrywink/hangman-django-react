@@ -25,7 +25,7 @@ export async function newGame(): Promise<GameId> {
   return response.data;
 }
 
-export async function makeGuess(data: GameGuess): Promise<Game> {
-  const response = await api.post(`/game/${data.guess}`, data);
+export async function makeGuess(id: string, data: GameGuess): Promise<Game> {
+  const response = await api.put(`/game/${id}/guess/`, data);
   return response.data;
 }
