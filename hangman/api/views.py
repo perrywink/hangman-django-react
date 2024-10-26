@@ -6,7 +6,7 @@ from .serializers import GameSerializer, GameIdSerializer, GameGuessSerializer
 
 # TMP API
 class GameList(generics.ListAPIView):
-    queryset = Game.objects.all()
+    queryset = Game.objects.all().order_by('-id')[:10]
     serializer_class = GameSerializer
 
 class GameCreate(generics.CreateAPIView):
