@@ -25,11 +25,13 @@ SECRET_KEY = 'django-insecure-4y43eebm08ggjjnoo!nu1(2uw%b8p7wsuwo3fu9+=cxmh8*5f3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Docker run host
+ALLOWED_HOSTS = [
+  '0.0.0.0'
+]
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,6 +42,7 @@ INSTALLED_APPS = [
     'api',
     'rest_framework',
     'drf_spectacular',
+    'http://localhost:3000' # whitelist frontend
 ]
 
 REST_FRAMEWORK = {
@@ -61,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'hangman.urls'
