@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { newGame } from "@/api/client";
-import { useMutation } from "@tanstack/react-query";
+import { getGames, newGame } from "@/api/client";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { GamesTable } from "@/components/games-table";
 
 export const Route = createFileRoute("/")({
   component: IndexPage,
@@ -9,6 +10,11 @@ export const Route = createFileRoute("/")({
 
 export function IndexPage() {
   const router = useRouter();
+  const listGame = useQuery({
+    queryKey: ["games"],
+    queryFn: getGames,
+  });
+
   const mutateNewGame = useMutation({
     mutationFn: newGame,
     onSuccess: (data) => {
@@ -22,13 +28,13 @@ export function IndexPage() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <Button
-          size="lg"
-          className="text-xl"
-          onClick={() => mutateNewGame.mutate()}
-        >
+        <h2 className="text-xl font-semibold">Your Recent Games</h2>
+        <Button onClick={() => mutateNewGame.mutate()}>
           {mutateNewGame.isPending ? "Loading..." : "New Game"}
         </Button>
+      </div>
+      <div className="border rounded">
+        <GamesTable games={listGame.data} />
       </div>
     </div>
   );
