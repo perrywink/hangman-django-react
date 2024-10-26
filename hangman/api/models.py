@@ -2,8 +2,6 @@ from django.db import models
 import math
 import random
 
-# Create your models here.
-
 
 class Game(models.Model):
     WORD_CHOICES = ["hangman", "python", "audacix", "bottle", "pen"]
@@ -41,7 +39,6 @@ class Game(models.Model):
         return random.choice(cls.WORD_CHOICES)
 
     def make_guess(self, guess: str):
-        print(self)
         if self.status != "InProgress":
             return self
 
@@ -53,8 +50,8 @@ class Game(models.Model):
         else:
             self.incorrect_guesses_made += 1
             self.incorrect_guesses_left -= 1
-        
-        if (self.incorrect_guesses_left  == 0):
+
+        if (self.incorrect_guesses_left == 0):
             self.status = "Loss"
         if ('_' not in self.word_state):
             self.status = "Win"
