@@ -1,8 +1,6 @@
 import axios from "axios";
 import type { Game, GameGuess, GameId } from "./generated/";
 
-// const API_BASE_URL = import.meta.env.VITE_BASE_API_URL
-
 const api = axios.create({
   baseURL: `/api`,
   headers: {
