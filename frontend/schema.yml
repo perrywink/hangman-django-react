@@ -58,38 +58,6 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GameGuess'
-          description: ''
-    patch:
-      operationId: game_guess_partial_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - game
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedGame'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedGame'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedGame'
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
                 $ref: '#/components/schemas/Game'
           description: ''
   /api/game/new/:
@@ -181,27 +149,6 @@ components:
           readOnly: true
       required:
       - id
-    PatchedGame:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        word_state:
-          type: string
-          maxLength: 100
-        status:
-          $ref: '#/components/schemas/StatusEnum'
-        incorrect_guesses_made:
-          type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
-        incorrect_guesses_left:
-          type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
     StatusEnum:
       enum:
       - InProgress

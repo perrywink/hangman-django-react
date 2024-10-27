@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from .models import Game
 from .serializers import GameSerializer, GameIdSerializer, GameGuessSerializer
 from drf_spectacular.utils import extend_schema
@@ -25,31 +26,15 @@ class GameRetrieve(generics.RetrieveAPIView):
     serializer_class = GameSerializer
     lookup_field = "pk"
 
-
-class GameUpdate(generics.UpdateAPIView):
-    queryset = Game.objects.all()
-    serializer_class = GameSerializer
-    lookup_field = "pk"
-
-    def get_serializer_class(self):
-        # Needed for schema generator to output game guess at al
-        if self.request.method == 'PUT':
-            return GameGuessSerializer
-        return GameSerializer
-
+# Using APIView for better customizability
+class GameGuess(APIView):
     # to allow for the schema generation to pick up on the correct types
     @extend_schema(request=GameGuessSerializer, responses={200: GameSerializer})
-    def update(self, request, *args, **kwargs):
-        game = self.get_object()
-
+    def put(self, request, pk):
+        game = get_object_or_404(Game, pk=pk)
         guess_serializer = GameGuessSerializer(data=request.data)
         guess_serializer.is_valid(raise_exception=True)
-
+        
         game.make_guess(guess_serializer.validated_data['guess'])
+        return Response(GameSerializer(game).data)
 
-        # separate object instead of usual self.get_serializer
-        response_serializer = GameSerializer(game)
-        return Response(
-            response_serializer.data,
-            status=status.HTTP_200_OK
-        )

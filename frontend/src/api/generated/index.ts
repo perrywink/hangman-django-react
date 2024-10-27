@@ -10,7 +10,6 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 export type { Game } from './models/Game';
 export type { GameGuess } from './models/GameGuess';
 export type { GameId } from './models/GameId';
-export type { PatchedGame } from './models/PatchedGame';
 export { StatusEnum } from './models/StatusEnum';
 
 export { GameService } from './services/GameService';

@@ -27,6 +27,7 @@ DEBUG = True
 
 # Docker run host
 ALLOWED_HOSTS = [
+  'localhost',
   '0.0.0.0'
 ]
 
@@ -42,7 +43,10 @@ INSTALLED_APPS = [
     'api',
     'rest_framework',
     'drf_spectacular',
-    'http://localhost:3000' # whitelist frontend
+]
+
+CORS_ORIGIN_WHITELIST = [
+     'http://localhost:3000' # whitelist frontend
 ]
 
 REST_FRAMEWORK = {
